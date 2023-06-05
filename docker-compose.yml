@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  mongo_db:
+    image: mongo:latest
+    container_name: database-app
+    ports:
+      - 2717:27017
+    volumes:
+      - mongodb:/data/db
+    restart: always
+  backend:
+    container_name: backend-app
+    build:
+      context: ./daos-backend
+    ports:
+      - 3000:3000
+    environment:
+      MONGODB_URI: mongodb://mongo_db:27017/daos
+    depends_on:
+      - mongo_db
+  frontend:
+    container_name: frontend-app
+    build:
+      context: ./daos-frontend
+    ports:
+      - 4000:4000
+volumes:
+  mongodb: {}
